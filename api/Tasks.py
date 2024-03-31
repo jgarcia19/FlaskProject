@@ -1,26 +1,16 @@
-from flask import Flask, jsonify, request
+from flask import Blueprint, jsonify, request
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 
-app = Flask(__name__)
+tasks_api = Blueprint('tasks_api', __name__)
+
 load_dotenv()
 database_url = os.getenv("DATABASE_URL")
-
 client = MongoClient(database_url)
 tasks = client.get_database('test').get_collection('tasks')
 
-@app.route('/')
-def hello_world():
-
-   hw = "Hello World"
-
-   response = jsonify(hw)
-   response.status_code = 200
-
-   return response
-
-@app.route('/tasks')
+@tasks_api.route('/tasks')
 def documents(): 
    documents = tasks.find({})
 
@@ -37,7 +27,7 @@ def documents():
 
    return response
 
-@app.route('/tasks/add', methods=['POST'])
+@tasks_api.route('/tasks/add', methods=['POST'])
 def add_task():
    data = request.json
 
@@ -50,8 +40,3 @@ def add_task():
    response = jsonify(message)
    response.status_code = 200
    return response
-
-
-
-if __name__ == '__main__':
-   app.run()
