@@ -71,3 +71,26 @@ def search_by_name_regex():
     response.status_code = 200
 
     return response
+
+@airbnb_api.route('/airbnb/search/propertyType/<property_type>', methods=['GET'])
+def search_by_property_type(property_type):
+    documents = airbnbs.find({"property_type": property_type})
+
+    data = []
+
+    i = 0
+    for document in documents:
+        if i == 100:
+            break
+        airbnb = {}
+        airbnb["name"] = document["name"]
+        airbnb["summary"] = document["summary"]
+        airbnb["space"] = document["space"]
+        airbnb["description"] = document["description"]
+        data.append(airbnb)
+        i += 1
+
+    response = jsonify(data), 200
+
+    return response
+        
