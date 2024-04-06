@@ -93,4 +93,8 @@ def search_by_property_type(property_type):
     response = jsonify(data), 200
 
     return response
+
+@airbnb_api.route('/airbnb/search/all')
+def search_by_filters():
+    pass
         

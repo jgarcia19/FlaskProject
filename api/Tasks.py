@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from models import task
 import os
 
 tasks_api = Blueprint('tasks_api', __name__)
@@ -17,13 +18,11 @@ def documents():
    data = []
 
    for document in documents:
-      task = {}
-      task["task"] = document["task"]
-      data.append(task)
+      new_task = task.Task()
+      new_task.set_task(document["task"])
+      data.append(new_task.to_dict())
 
-   response = jsonify(data)
-
-   response.status_code = 200
+   response = jsonify(data), 200
 
    return response
 
@@ -37,6 +36,5 @@ def add_task():
 
 
    message = "Task Successfully Added"
-   response = jsonify(message)
-   response.status_code = 200
+   response = jsonify(message), 200
    return response
